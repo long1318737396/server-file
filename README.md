@@ -48,6 +48,59 @@ go build server-file.go
 curl -X GET http://localhost:8080/download/your-large-file.bin?token=a1b2c3d4e5f67890 -o downloaded-file.bin
 ```
 
+## systemd服务配置
+
+项目包含一个systemd服务配置文件 [server-file.service](file:///Users/pangguanglong/vscode/src/long1318737396/mytest/server-file.service)，可用于将应用程序作为系统服务运行。
+
+### 安装步骤
+
+1. 编译程序:
+   ```bash
+   go build server-file.go
+   ```
+
+2. 将二进制文件复制到系统目录:
+   ```bash
+   sudo cp server-file /usr/local/bin/
+   ```
+
+3. 将service文件复制到systemd目录:
+   ```bash
+   sudo cp server-file.service /etc/systemd/system/
+   ```
+
+4. 创建运行用户和目录:
+   ```bash
+   sudo useradd -r -s /bin/false www-data
+   sudo mkdir -p /var/lib/server-file/uploads
+   sudo chown www-data:www-data /var/lib/server-file/uploads
+   ```
+
+5. 重新加载systemd并启用服务:
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable server-file.service
+   ```
+
+### 管理服务
+
+```bash
+# 启动服务
+sudo systemctl start server-file
+
+# 停止服务
+sudo systemctl stop server-file
+
+# 重启服务
+sudo systemctl restart server-file
+
+# 查看服务状态
+sudo systemctl status server-file
+
+# 查看服务日志
+sudo journalctl -u server-file -f
+```
+
 ## API接口
 
 | 接口 | 方法 | 描述 |
